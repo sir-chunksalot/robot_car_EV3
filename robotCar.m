@@ -9,9 +9,9 @@ while 1
     
     switch key
 
-    case 'uparrow'
+    case 'w'
 
-        disp('Up Arrow Pressed!');
+        disp('w Pressed!');
         brick.MoveMotor('A', 100);
 
     case 'downarrow'
