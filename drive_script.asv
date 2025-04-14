@@ -5,15 +5,15 @@ global key;
 InitKeyboard();
 LMotor = 'A';
 RMotor = 'D';
-clawMotor = 'B';
-colorSensor = 2;
-distanceSensor = 4;
+clawMotor = 'C';
+colorSensor = 4;
+distanceSensor = 2;
 killSwitch = 1;
 wallButton = 3;
 speed = 55;
 pauseDelay = .5;
-leftTurnAngle = .64;
-rightTurnAngle = .95;
+leftTurnAngle = .45;
+rightTurnAngle = .65;
 
 auto = false;
 while 1
@@ -22,6 +22,18 @@ while 1
     if(auto == false) 
         
         pause(0.1);
+        
+        brick.SetColorMode(colorSensor, 4); 
+        color_rgb = brick.ColorRGB(colorSensor);
+        
+
+
+        
+        %print color of object
+        fprintf("\tRed: %d\n", color_rgb(1));
+        fprintf("\tGreen: %d\n", color_rgb(2));
+        fprintf("\tBlue: %d\n", color_rgb(3));
+        
       
         if (key == 'w')
             forward(brick, LMotor, RMotor, speed, pauseDelay);
@@ -32,36 +44,32 @@ while 1
             disp('S Pressed');
         end
         if (key == 'a')
-            turnLeft(brick, LMotor, RMotor, speed, .2);
+            turnLeft(brick, LMotor, RMotor, speed, .1);
             disp('a Pressed');
         end
         if (key == 'd')
-            turnRight(brick, LMotor, RMotor, speed, .2);
+            turnRight(brick, LMotor, RMotor, speed, .1);
             disp('d Pressed');
         end
         if(key == 'z')
             brick.StopAllMotors('Brake');
             pause(0.1);
-            brick.MoveMotor(clawMotor, -speed);
-            pause(pauseDelay);
+            brick.MoveMotor(clawMotor, -25);
+            pause(.1);
             brick.StopAllMotors('Brake');
             disp('z Pressed');
         end
         if(key == 'x')
             brick.StopAllMotors('Brake');
             pause(0.1);
-            brick.MoveMotor(clawMotor, speed);
-            pause(pauseDelay);
+            brick.MoveMotor(clawMotor, 25);
+            pause(.1);
             brick.StopAllMotors('Brake');
             disp('x Pressed');
         end
         if (key == 'e')
             brick.StopAllMotors('Brake');
             disp('End');
-        end
-        if (key == 'q')
-            brick.StopAllMotors('Brake');
-
         end
     end
     if(auto)
@@ -88,7 +96,7 @@ while 1
             pause(.5);
 
         end
-        if(color_rgb(2) > color_rgb(1) + color_rgb(3)) %green
+        if(color_rgb(2) > 52 && color_rgb(3) > 45 && color)rgb() %green
             %pickup
             %brick.StopAllMotors('Brake');
             %auto = ~auto;
@@ -101,14 +109,23 @@ while 1
             pause(1);
             disp("detected green. switching to manual control");
         end
-        if(color_rgb(3) > color_rgb(1) + color_rgb(2)) %blue
-            %drop off
-            disp("detected blue");
-            brick.beep();
-            pause(.3);
-            brick.beep();
-            brick.StopAllMotors('Brake');
-            pause(1);
+        if(color_rgb(3) > 100 && color_rgb(3) < 500) %blue
+            % %drop off
+            % disp("detected blue");
+            % brick.beep();
+            % pause(.3);
+            % brick.beep();
+            % brick.StopAllMotors('Brake');
+            % pause(1);
+        end
+        if(color_rgb(1) > 200 && color_rgb(2) > 50 && color_rgb(1) < 500) %yellow
+            % %drop off
+            % disp("detected blue");
+            % brick.beep();
+            % pause(.3);
+            % brick.beep();
+            % brick.StopAllMotors('Brake');
+            % pause(1);
         end
 
 
@@ -135,7 +152,7 @@ while 1
             turnLeft(brick, LMotor, RMotor, speed, .2)
         end
         if(distance > 65) % if so, turn right
-            forward(brick, LMotor, RMotor, speed, .8);
+            forward(brick, LMotor, RMotor, speed, 1);
             turnRight(brick, LMotor, RMotor, speed, rightTurnAngle);
             disp("CLEARING WALL");
             forward(brick, LMotor, RMotor, speed, 2);
